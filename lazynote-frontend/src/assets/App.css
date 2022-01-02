@@ -1,0 +1,19 @@
+body {
+  margin: 0; }
+
+.main-color-lazy {
+  color: #1B593C !important; }
+  .main-color-lazy:hover {
+    color: #6FA673; }
+
+.main-backgroundColor-lazy {
+  background-color: #1B593C !important;
+  color: #fff !important; }
+  .main-backgroundColor-lazy:hover {
+    background-color: #6FA673;
+    color: #fff !important; }
+
+.position-fixed {
+  position: fixed; }
+
+/*# sourceMappingURL=App.css.map */

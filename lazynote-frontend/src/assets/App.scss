@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+}
+$mainColor:#1B593C;
+$secondaryColor:#6FA673;
+$thirdColor:#F2D06B;
+
+.main-color-lazy {
+    color:$mainColor !important;
+    &:hover {
+        color: $secondaryColor;
+    }
+}
+.main-backgroundColor-lazy {
+    background-color: $mainColor !important;
+    color: #fff!important;
+    &:hover {
+        background-color: $secondaryColor;
+        color: #fff !important;
+    }
+}
+
+.position-fixed {
+    position: fixed;
+}
