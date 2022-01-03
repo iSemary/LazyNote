@@ -3,7 +3,8 @@ import {Toolbar, Typography, Box, AppBar, Button, IconButton} from "@mui/materia
 import {Link} from 'react-router-dom'
 import {VscNotebook} from 'react-icons/vsc';
 import {CgMenuGridO} from 'react-icons/cg';
-
+import {BiLogInCircle} from 'react-icons/bi'
+import {IoIosPersonAdd} from 'react-icons/io'
 function Header() {
     return (
         <Box sx={{flexGrow: 0, m: 0}}>
@@ -12,8 +13,8 @@ function Header() {
                     <Typography variant="h6" component={Link} color="inherit" to={'/'} sx={{flexGrow: 1}}>
                         <VscNotebook/> LazyNote
                     </Typography>
-                    <Button component={Link} color="inherit" to={'/login'}>Login</Button>
-                    <Button component={Link} color="inherit" to={'/register'}>Register</Button>
+                    <Button component={Link} color="inherit" to={'/login'}><BiLogInCircle></BiLogInCircle>&nbsp;Login</Button>
+                    <Button component={Link} color="inherit" to={'/register'}><IoIosPersonAdd></IoIosPersonAdd>&nbsp;Register</Button>
                     <IconButton
                         color="inherit"
                         size="large"
