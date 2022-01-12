@@ -7,3 +7,4 @@
 - React Router Dom
 - React Icons
 - Gulp
+- Alertify

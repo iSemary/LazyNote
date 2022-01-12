@@ -1,135 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  FormGroup,
+  FormLabel,
+  FormControlLabel,
+  TextField,
+  Typography,
+  Radio,
+  FormControl,
   Box,
+  AppBar,
   Grid,
+  Avatar,
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
-  IconButton,
-  Avatar,
-  Typography,
+  Button,
+  LinearProgress,
+  RadioGroup,
+  FormHelperText,
+  CircularProgress,
 } from "@mui/material";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import TestPng from "../../assets/img/default.png";
-import { MdOutlineNoteAdd } from "react-icons/md";
-function Welcome() {
-  const [user, SetUser] = useState(false);
+import alertify from "alertifyjs";
+function Home() {
   const navigate = useNavigate();
-  function AddNoteBtn() {
-    if (user) {
-      alert("Create Note");
-    } else {
-      navigate("/login");
-    }
+  const [Notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    axios.get("sanctum/csrf-cookie/").then((res) => {
+      axios.get("api/notes/public").then((res) => {
+        if (res.data.status === 200) {
+          setNotes(res.data.notes);
+        }
+      });
+    });
+  }, []);
+
+  let NotesSection = "";
+  if (Object.keys(Notes).length > 0) {
+    NotesSection = Notes.map((Note, index) => {
+      return (
+        <Grid item xs={4}>
+          <Card sx={{ maxWidth: 450 }}>
+            <CardHeader
+              title={Note.user_id}
+              subheader={Note.created_at}
+              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
+            />
+            <CardContent>
+              <Typography variant="h5" color="initial">
+                {Note.title}
+              </Typography>
+              <Typography variant="p" color="initial">
+                {Note.body}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+    });
+  } else {
+    NotesSection = (
+      <Grid item sx={{ margin: "0 auto" }}>
+        <Card>
+          <LinearProgress color="success" />
+          Loading... Please wait.
+        </Card>
+      </Grid>
+    );
   }
 
   return (
     <Box component="div" sx={{ margin: 2 }}>
-      <Typography variant="h5" style={{ textAlign: "center" }} color="initial">
+      <Typography variant="body1" color="initial">
         Discover helpful public notes from all over the world
       </Typography>
-      {/* Public Notes */}
       <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardHeader
-              title="Abdelrahman Samir"
-              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
-            />
-            <CardMedia
-              component="img"
-              height="194"
-              image={TestPng}
-              alt="Note Image"
-            />
-            <CardContent>
-              <Typography variant="body1" color="initial">
-                Hello
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardHeader
-              title="Abdelrahman Samir"
-              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
-            />
-            <CardContent>
-              <Typography variant="body1" color="initial">
-                Medium Top 10 Programming Languages to Learn in 2020
-                [infographic] | by Agile Actors | PlayBook | Medium Visit Images
-                may be subject to copyright. Learn More
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardHeader
-              title="Abdelrahman Samir"
-              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
-            />
-            <CardMedia
-              component="img"
-              height="194"
-              image={TestPng}
-              alt="Note Image"
-            />
-            <CardContent>
-              <Typography variant="body1" color="initial">
-                Hello
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardHeader
-              title="Abdelrahman Samir"
-              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
-            />
-
-            <CardContent>
-              <Typography variant="body1" color="initial">
-                Hello
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardHeader
-              title="Abdelrahman Samir"
-              avatar={<Avatar sx={{ backgroundColor: "#F2D06B" }}>A</Avatar>}
-            />
-            <CardMedia
-              component="img"
-              height="194"
-              image={TestPng}
-              alt="Note Image"
-            />
-            <CardContent>
-              <Typography variant="body1" color="initial">
-                Hello
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        {NotesSection}
       </Grid>
-      {/* Create Note Button */}
-      <IconButton
-        aria-label="Add Note"
-        size="large"
-        style={{ position: "fixed", bottom: "15px", right: "15px" }}
-        className="main-backgroundColor-lazy"
-        onClick={AddNoteBtn}
-      >
-        <MdOutlineNoteAdd></MdOutlineNoteAdd>
-      </IconButton>
     </Box>
   );
 }
 
-export default Welcome;
+export default Home;

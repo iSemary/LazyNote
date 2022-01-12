@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FormGroup,
   FormLabel,
@@ -15,39 +15,41 @@ import {
   RadioGroup,
   InputLabel,
   FormHelperText,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   CircularProgress,
 } from "@mui/material";
+import { CgTag } from "react-icons/cg";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import alertify from "alertifyjs";
-function AddNote() {
+function AddTag() {
   const navigate = useNavigate();
+  const ExistTags = useRef([]);
+
   const [Tags, setTags] = useState([]);
-  const [Note, setNote] = useState({
-    title: "",
-    tag_id: "",
-    body: "",
-    error_list: [],
-  });
+  const [Tag, setTag] = useState([]);
   const FormStyle = {
     margin: "0 auto",
     width: "500px",
   };
 
   const HandleInput = (e) => {
-    setNote({ ...Note, [e.target.name]: e.target.value });
+    setTag({ ...Tag, [e.target.name]: e.target.value });
   };
-  const NoteSubmitHandler = (e) => {
+  const TagSubmitHandler = (e) => {
     const data = {
-      title: Note.title,
-      tag_id: Note.tag_id,
-      body: Note.body,
+      name: Tag.name,
     };
     axios.get("sanctum/csrf-cookie/").then((res) => {
-      axios.post("api/notes/store", data).then((res) => {
+      axios.post("api/tags/store", data).then((res) => {
         if (res.data.status === 200) {
           alertify.success(res.data.message);
-
+          // append new created tag to the list to top
+          setTags([res.data.tag,...Tags]);
         } else {
           alertify.error(res.data.message);
         }
@@ -69,9 +71,12 @@ function AddNote() {
   if (Object.keys(Tags).length > 0) {
     TagsSection = Tags.map((Tag, index) => {
       return (
-        <MenuItem value={Tag.id} key={Tag.id}>
-          {Tag.name}
-        </MenuItem>
+        <ListItem key={Tag.id}>
+          <ListItemIcon>
+            <CgTag />
+          </ListItemIcon>
+          <ListItemText primary={Tag.name} secondary={Tag.created_at} />
+        </ListItem>
       );
     });
   }
@@ -83,55 +88,39 @@ function AddNote() {
         className="main-color-lazy"
         sx={{ marginBottom: "5px" }}
       >
-        Create a new note
+        Create a new tag
       </Typography>
       <FormGroup>
         <FormControl sx={{ marginBottom: "7px" }}>
           <TextField
-            label="Note Title"
+            label="Tag Name"
             variant="outlined"
-            name="title"
+            name="name"
             onChange={HandleInput}
-            defaultValue={Note.title}
-          />
-        </FormControl>
-        <FormControl sx={{ marginBottom: "7px" }}>
-          <InputLabel id="tagLabel">Tag</InputLabel>
-          <Select
-            label="Tag"
-            labelId="tagLabel"
-            id="tagLabel"
-            defaultValue={Note.tag_id}
-            value={Note.tag_id}
-            name="tag_id"
-            onChange={HandleInput}
-          >
-            {TagsSection}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ marginBottom: "7px" }}>
-          <TextField
-            multiline
-            placeholder="What, where, when ..."
-            onChange={HandleInput}
-            name="body"
-            required
-            rows={5}
+            defaultValue={Tag.name}
           />
         </FormControl>
         <FormControl sx={{ marginBottom: "7px" }}>
           <Button
             variant="text"
             className="main-backgroundColor-lazy"
-            onClick={NoteSubmitHandler}
+            onClick={TagSubmitHandler}
           >
-            {Note.error_list === null ? <CircularProgress /> : ""}
-            &nbsp; Create New Note
+            {Tag.error_list === null ? <CircularProgress /> : ""}
+            &nbsp; Create New Tag
           </Button>
         </FormControl>
       </FormGroup>
+
+      <List
+        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        ref={ExistTags}
+        id="ExistTags"
+      >
+        {TagsSection}
+      </List>
     </Box>
   );
 }
 
-export default AddNote;
+export default AddTag;
