@@ -1,5 +1,14 @@
 
 # LazyNote
+
+## Features
+
+- **User Registration**
+- **CURD Note**
+- **Tag Assign**
+
+## Preview
+
 <img src="Preview.gif" width="500px"/>
 
 #### Note network for publishing and create notes whether public or private for each user created with Laravel 8 and React 17.0.2
